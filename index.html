@@ -14,23 +14,69 @@
     <main>
       <section class="signup-box">
         <h2>Sending It Soon!</h2>
-        <p>Brynja, a feminine climber brand made by a female climber, will be launching soon! Add your email to be one of the first in the know :)<br>
-        Brynja is on a mission to create cute climber pants at a cute price point</p>
+        <p>
+          Brynja, a feminine climber brand made by a female climber, will be launching soon! Add your email to be one of the first in the know :)<br>
+          Brynja is on a mission to create cute climber pants at a cute price point.
+        </p>
         
         <form id="email-form">
-  <label for="email">Email *</label>
-  <input type="email" id="email" placeholder="you@example.com" required>
-  
-  <label class="checkbox-label">
-    <input type="checkbox" id="subscribe">
-    I want to subscribe to your mailing list.
-  </label>
+          <label for="email">Email *</label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+          
+          <label class="checkbox-label">
+            <input type="checkbox" id="subscribe">
+            I want to subscribe to your mailing list.
+          </label>
 
-  <button type="submit" id="submit-btn">Subscribe</button>
-</form>
+          <button type="submit" id="submit-btn">Subscribe</button>
+        </form>
 
+        <!-- Confirmation Message -->
+        <div id="confirmation" style="display: none; margin-top: 1em; color: green;">
+          Thanks! You’re on the list. 💌
+        </div>
       </section>
     </main>
   </div>
+
+  <!-- JavaScript -->
+  <script>
+    document.getElementById("submit-btn").addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const subscribe = document.getElementById("subscribe").checked;
+
+      if (email && validateEmail(email)) {
+        fetch("https://formspree.io/f/xvgravza", {  // 🔁 Replace with your actual Formspree form ID
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({ email: email, subscribe: subscribe })
+        })
+        .then(response => {
+          if (response.ok) {
+            document.getElementById("confirmation").style.display = "block";
+            document.getElementById("email").value = "";
+            document.getElementById("subscribe").checked = false;
+          } else {
+            alert("There was an error submitting your email.");
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Network error.");
+        });
+      } else {
+        alert("Please enter a valid email address.");
+      }
+    });
+
+    function validateEmail(email) {
+      return /\S+@\S+\.\S+/.test(email);
+    }
+  </script>
 </body>
 </html>
