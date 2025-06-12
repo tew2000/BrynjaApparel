@@ -1,4 +1,6 @@
-document.getElementById("submit-btn").addEventListener("click", () => {
+document.getElementById("submit-btn").addEventListener("click", (event) => {
+  event.preventDefault(); // ✅ Prevent form refresh
+
   const email = document.getElementById("email").value;
 
   if (email && validateEmail(email)) {
@@ -12,6 +14,7 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     .then(response => {
       if (response.ok) {
         document.getElementById("confirmation").style.display = "block";
+        document.getElementById("email").value = ""; // Clear input
       } else {
         alert("There was an error submitting your email.");
       }
