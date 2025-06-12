@@ -1,22 +1,25 @@
 document.getElementById("submit-btn").addEventListener("click", (event) => {
-  event.preventDefault(); // ✅ Prevent form refresh
+  event.preventDefault(); // Prevent form refresh
 
   const email = document.getElementById("email").value;
 
   if (email && validateEmail(email)) {
-    fetch("https://script.google.com/macros/s/AKfycbwmrWJITf6V4-rEZQ2HjUw4nJLGhRegem6xzLaXihW8m4QPH1-ySGsoSagdxXskQggYag/exec", {
+    fetch("https://formspree.io/f/xvgravza", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Accept: "application/json"
       },
       body: JSON.stringify({ email: email })
     })
     .then(response => {
       if (response.ok) {
         document.getElementById("confirmation").style.display = "block";
-        document.getElementById("email").value = ""; // Clear input
+        document.getElementById("email").value = ""; // Clear form
       } else {
-        alert("There was an error submitting your email.");
+        response.json().then(data => {
+          alert(data.error || "There was an error submitting your email.");
+        });
       }
     })
     .catch(error => {
